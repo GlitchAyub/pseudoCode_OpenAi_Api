@@ -19,12 +19,12 @@ const openai = new OpenAIApi(config)
 const converstionContext = [];
 const currentMessage = [];
 
-// funtion to handle chat conversation in post menthod
+// function to handle chat conversation in post method
 const generateResponse = async (req , res )=>{
   try {
     const {prompt} = req.body;
     const modelId ="gpt-3.5-turbo";
-    const promtText = `${prompt} \n \nResponse: `;
+    const promptText = `${prompt} \n \nResponse: `;
 
     // restore the prev context
 
@@ -33,7 +33,7 @@ const generateResponse = async (req , res )=>{
       currentMessage.push({role:"assistant",content:responseText})
     }
     // store the new message
-    currentMessage.push({role:'user',content:promtText})
+    currentMessage.push({role:'user',content:promptText})
 
     const result = await openai.createChatCompletion({
       model:modelId,
@@ -41,7 +41,7 @@ const generateResponse = async (req , res )=>{
     })
 
     const responseText = result.data.choices.shift().message.content;
-    converstionContext.push([promtText,responseText]);
+    converstionContext.push([promptText,responseText]);
     res.send({response:responseText})
   } catch (error) {
     console.log(error);
